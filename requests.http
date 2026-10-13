@@ -1,0 +1,62 @@
+### REST Client / IntelliJ HTTP Client file. Order-service on :8080, review-service on :8083.
+
+### Menu
+GET http://localhost:8080/dishes
+
+### One dish
+GET http://localhost:8080/dishes/1
+
+### Dish not found -> 404
+GET http://localhost:8080/dishes/999
+
+### Place an order -> 201 (409 sold out, 404 unknown dish, 400 invalid quantity, 502 payment failed)
+POST http://localhost:8080/orders
+Content-Type: application/json
+
+{"dishId": 2, "quantity": 2}
+
+### Invalid quantity -> 400
+POST http://localhost:8080/orders
+Content-Type: application/json
+
+{"dishId": 2, "quantity": 0}
+
+### Unknown dish -> 404
+POST http://localhost:8080/orders
+Content-Type: application/json
+
+{"dishId": 999, "quantity": 1}
+
+### Get an order
+GET http://localhost:8080/orders/1
+
+### Review -> 202 Accepted with no body
+POST http://localhost:8080/reviews
+Content-Type: application/json
+
+{"dishId": 1, "rating": 5, "comment": "Great"}
+
+### Invalid rating -> 400
+POST http://localhost:8080/reviews
+Content-Type: application/json
+
+{"dishId": 1, "rating": 9, "comment": "Too much"}
+
+### Ranking (read from the database by review-service)
+GET http://localhost:8083/reviews/ranking
+
+### Assistant: on topic
+POST http://localhost:8080/assistant
+Content-Type: application/json
+
+{"question": "Tem prato vegetariano até R$ 40?"}
+
+### Assistant: off topic (must be politely refused)
+POST http://localhost:8080/assistant
+Content-Type: application/json
+
+{"question": "Quem ganhou a Copa de 2002?"}
+
+### Eureka registry (JSON)
+GET http://localhost:8761/eureka/apps
+Accept: application/json

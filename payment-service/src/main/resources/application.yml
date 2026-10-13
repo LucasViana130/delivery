@@ -1,0 +1,20 @@
+server:
+  port: 8081   # second instance: bootRun --args='--server.port=8082'
+
+spring:
+  application:
+    name: payment-service
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    # One distinct id per instance (name + port), so both show up in Eureka.
+    instance-id: ${spring.application.name}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+
+payment:
+  # Probability (0.0 to 1.0) that POST /payments answers 500. The scenario asks for about 50%.
+  failure-rate: 0.5

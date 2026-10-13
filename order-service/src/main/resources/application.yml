@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: order-service
+
+  datasource:
+    url: jdbc:h2:mem:orders;DB_CLOSE_DELAY=-1;LOCK_TIMEOUT=60000
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 50
+      connection-timeout: 60000
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+
+  cloud:
+    loadbalancer:
+      cache:
+        ttl: 5s
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:not-configured}
+      chat:
+        model: ${AI_MODEL:gpt-4o-mini}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+  client:
+    registry-fetch-interval-seconds: 5
+
+delivery:
+  rate-limit:
+    enabled: true
+    orders-per-second: 20
